@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <h1>Word Definition</h1>
+
+
+    {% for item in word %}
+        {% if word[item] %}
+            <h2>{{ item }}</h2>
+            {% for nature in word[item] %}
+                <h3>{{ nature }}</h3>
+                {% for def in word[item][nature] %}
+                    <ul>
+                    <li>{{ def['explanation'] }}</li>
+                    {% for example in def['examples'] %}
+                        <ul>
+                            <li>{{ example }}</li>
+                        </ul>
+                    {% endfor %}
+                    </ul>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{{ bd }}
+
+{% endblock %}
+
+
+
+
+
+
