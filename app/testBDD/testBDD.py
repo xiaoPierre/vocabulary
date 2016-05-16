@@ -12,6 +12,7 @@ session = Session()
 
 query = session.query(Word).order_by(Word.freqfilms).filter(Word.freqfilms>10).filter(Word.freqfilms<15)
 for word in query:
+
     print(word)
 
 query = session.query(User).all()
