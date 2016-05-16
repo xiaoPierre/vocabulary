@@ -1,21 +1,10 @@
 from sqlalchemy import Column, String, create_engine, Integer, ForeignKey, Float, Boolean
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-import requests
-from lxml import etree
-from time import sleep
-import re, os
+from sqlalchemy import inspect
+
 
 Base = declarative_base()
-
-class User(Base):
-    __tablename__ = 'userTable'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    firstName = Column(String(40))
-    lastName = Column(String(40))
-    email = Column(String(60))
-    password = Column(String(40))
-    level = Column(Integer())
 
 class Word(Base):
     __tablename__ = 'wordTable'
@@ -31,8 +20,14 @@ class Word(Base):
     freqfilms = Column(Float())
     freqlivres = Column(Float())
 
+    def getLength(self):
+        return len(self.ortho)
+
+    def isLemme(self):
+        return self.ortho == self.lemme
+
     def __str__(self):
-        return "I am " + self.ortho + " and my frequence is " + str(self.freqlemfilms)
+        return "I am " + self.ortho + " and my frequence is " + str(self.freqfilms)
 
 
 

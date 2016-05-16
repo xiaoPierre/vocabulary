@@ -6,7 +6,7 @@ print(os.getcwd())
 os.chdir('../../')
 print(os.getcwd())
 
-engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test")
+engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test", echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -31,5 +31,6 @@ with open('Lexique381.txt', 'r', encoding='utf-8') as source:
                     freqfilms=freqfilms, freqlivres=freqlivres, infover=infover)
         session.add(word)
     session.commit()
+    session.close()
 
 

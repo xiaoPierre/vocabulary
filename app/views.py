@@ -5,7 +5,7 @@ from app.crawling.crawlWord import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from app.model.Word import *
-
+from app.model.User import *
 
 
 # index view function suppressed for brevity
@@ -25,6 +25,33 @@ def login():
         title='Sign In',
         form=form)
 
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    return render_template('signup.html')
+
+@app.route('/signuptreatement', methods=['GET', 'POST'])
+def signuptreatement():
+    firstName=request.form['firstName']
+    lastName=request.form['lastName']
+    email=request.form['email']
+    password=request.form['password']
+    passwordConfirm=request.form['passwordConfirm']
+    assert(password == passwordConfirm)
+    if (passwordConfirm != password):
+        return render_template('index.html')
+    engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test", echo=True)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    user = User(firstName=firstName, lastName=lastName,
+                email=email, password=password)
+    session.add(user)
+    session.commit()
+    session.close()
+    return render_template('thanks.html', firstName=firstName, lastName=lastName)
+
+
 @app.route('/lookup')
 def lookup():
     word = request.args.get('q')
@@ -34,15 +61,4 @@ def lookup():
     session = Session()
     for element in session.query(Word).filter_by(ortho=word):
         print(element)
-
     return render_template('word.html', word=definition)
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    return render_template('signup.html')
-
-@app.route('/signuptreatement', methods=['GET', 'POST'])
-def signuptreatement():
-    firstname=request.form['firstName']
-    lastname=request.form['lastName']
-    return render_template('thanks.html', firstName=firstname, lastName=lastname)
