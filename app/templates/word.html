@@ -4,12 +4,17 @@
 {% block body %}
     <h1>Word Definition</h1>
 
-
     {% for item in word %}
         {% if word[item] %}
             <h2>{{ item }}</h2>
             {% for nature in word[item] %}
                 <h3>{{ nature }}</h3>
+                <h4>{{ genre }}</h4>
+                <h5>{{ infoverb }}</h5>
+                <h6>{{ freq }}</h6>
+                <h6>{{ freqLemme }}</h6>
+
+
                 {% for def in word[item][nature] %}
                     <ul>
                     <li>{{ def['explanation'] }}</li>

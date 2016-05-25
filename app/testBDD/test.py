@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.model.Word import *
+from app.Model.Word import *
 print(os.getcwd())
 os.chdir('../../')
 print(os.getcwd())

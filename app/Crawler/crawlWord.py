@@ -1,6 +1,6 @@
 import requests
-
 from bs4 import BeautifulSoup
+
 def lookUpWord(word):
     result = {}
     urlBase = r'https://fr.m.wiktionary.org/wiki/'
@@ -155,3 +155,41 @@ def dictToWord():
         for item in a[key]:
             print(item['explanation'])
             print(item['examples'])
+
+
+def crawlSynonyme(word):
+    urlBase = 'http://www.crisco.unicaen.fr/des/synonymes/'
+    url = urlBase + word
+    page = requests.get(url)
+    pageHTML = page.content.decode(page.encoding)
+    soup = BeautifulSoup(pageHTML, 'lxml')
+    synonymesDIV = soup.find('div', id='synonymes')
+    if synonymesDIV:
+        ret = []
+        synonymes = synonymesDIV.find_all('tr')
+        for item in synonymes:
+            ret.append(item.text)
+        return ret
+    else:
+        return []
+
+def crawlAntonyme(word):
+    urlBase = 'http://www.antonyme.org/antonyme/'
+    url = urlBase + word
+    page = requests.get(url)
+    pageHTML = page.content.decode(page.encoding)
+    soup = BeautifulSoup(pageHTML, 'lxml')
+    conteneur = soup.find('div', id='conteneur')
+    antonymeDIV = conteneur.find('ul', class_='synos')
+    if antonymeDIV:
+        ret = []
+        antonymes = antonymeDIV.find_all('li')
+        for item in antonymes:
+            ret.append(item.text)
+        return ret
+    else:
+        return []
+
+
+if __name__ == '__main__':
+    print(crawlAntonyme('mangerais'))

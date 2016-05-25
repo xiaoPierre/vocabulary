@@ -1,11 +1,11 @@
 from flask import render_template, flash, redirect, request
 from app import app
 from app.forms import LoginForm
-from app.crawling.crawlWord import *
+from app.Crawler.crawlWord import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from app.model.Word import *
-from app.model.User import *
+from app.Model.Word import *
+from app.Model.User import *
 
 
 # index view function suppressed for brevity
@@ -61,4 +61,6 @@ def lookup():
     session = Session()
     for element in session.query(Word).filter_by(ortho=word):
         print(element)
-    return render_template('word.html', word=definition)
+    print(definition)
+    return render_template('word.html',
+                           word=definition)
