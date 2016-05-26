@@ -12,6 +12,12 @@ class Article:
         self.title = title
         self.content = content
         self.author = author
+    def __str__(self):
+        strRes = self.title + '\n'
+        strRes += self.author + '\n'
+        strRes += self.content
+        return strRes
+
 
 def crawlArticle(theme):
     assert(theme in themes)
@@ -32,6 +38,6 @@ def crawlArticle(theme):
     return Article(title, content, author)
 
 
-crawlArticle('economie')
+print(crawlArticle('economie'))
 
 

@@ -14,4 +14,4 @@ def crawlImage(word):
     else:
         return ''
 
-print(crawlImage('afadsfdsagdsa'))
+print(crawlImage('bite'))
