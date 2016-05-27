@@ -4,7 +4,6 @@ class WordCrawled:
         self.etymonogie = etymonogie
         self.natures = natures
 
-
     def __str__(self):
         strRes = self.etymonogie
         for nature in self.natures:

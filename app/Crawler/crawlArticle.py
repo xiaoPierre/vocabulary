@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+# TODO purifier l'article ramassée
 themes = ['international', 'politique', 'societe',
          'economie', 'culture', 'idees', 'planete',
          'sport', 'sciences', 'campus']

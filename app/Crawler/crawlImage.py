@@ -14,4 +14,3 @@ def crawlImage(word):
     else:
         return ''
 
-print(crawlImage('bite'))

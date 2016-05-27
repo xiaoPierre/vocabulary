@@ -1,9 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from app.Crawler.WordCrawled import *
-def lookUpWord(word):
+import random
+
+#TODO location verbe, verbe vt et vi
+def crawlWord(word):
     natureListe = ['fr-nom', 'fr-nom-2', 'fr-adj', 'fr-adv',
-                   'fr-verb', 'fr-interj', 'fr-flex-verb-1',
+                   'fr-verb', 'fr-interj',
                    'fr-flex-verb-2', 'fr-adj-pos-1', 'fr-pronom-per-1']
     urlBase = r'https://fr.m.wiktionary.org/wiki/'
     url = urlBase + word
@@ -111,11 +114,9 @@ def crawlSynonyme(word):
     soup = BeautifulSoup(pageHTML, 'lxml')
     synonymesDIV = soup.find('div', id='synonymes')
     if synonymesDIV:
-        ret = []
         synonymes = synonymesDIV.find_all('tr')
-        for item in synonymes:
-            ret.append(item.text)
-        return ret
+        synonyme = synonymes[0].text.strip()
+        return synonyme
     else:
         return []
 
@@ -123,18 +124,31 @@ def crawlAntonyme(word):
     urlBase = 'http://www.antonyme.org/antonyme/'
     url = urlBase + word
     page = requests.get(url)
-    pageHTML = page.content.decode(page.encoding)
+    pageHTML = page.content.decode('utf-8')
     soup = BeautifulSoup(pageHTML, 'lxml')
     conteneur = soup.find('div', id='conteneur')
     antonymeDIV = conteneur.find('ul', class_='synos')
     if antonymeDIV:
-        ret = []
         antonymes = antonymeDIV.find_all('li')
-        for item in antonymes:
-            ret.append(item.text)
-        return ret
+        antonyme = antonymes[0].text.strip()
+        return antonyme
     else:
         return []
 
+def crawlPhrase(word):
+    wordObj = crawlWord(word)
+    natures = []
+    for nature in wordObj.natures:
+        natures.append(nature)
+    natureObj = random.choice(natures)
+    defs = []
+    for definition in natureObj.definitions:
+        defs.append(definition)
+    random.shuffle(defs)
+    for definition in defs:
+        if len(definition.exemples) > 0:
+            return definition.exemples[0]
+
+
 if __name__ == '__main__':
-    print(lookUpWord('crever_l’abcès'))
+    print(crawlAntonyme('charitable'))
