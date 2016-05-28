@@ -108,4 +108,4 @@ def prononciationExo(word):
 
 
 
-print(blankFillingExo('halluciner', 20))
+print(blankFillingExo('lumière', 1000))

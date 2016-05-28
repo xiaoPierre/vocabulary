@@ -151,4 +151,4 @@ def crawlPhrase(word):
 
 
 if __name__ == '__main__':
-    print(crawlAntonyme('charitable'))
+    print(crawlWord('charitable'))

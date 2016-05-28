@@ -2,9 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.Model.Word import *
-print(os.getcwd())
-os.chdir('../../')
-print(os.getcwd())
+
 
 engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test", echo=True)
 Session = sessionmaker(bind=engine)
