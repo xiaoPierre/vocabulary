@@ -2,20 +2,21 @@ import requests
 from bs4 import BeautifulSoup
 
 # TODO purifier l'article ramassée
-themes = ['international', 'politique', 'societe',
-         'economie', 'culture', 'idees', 'planete',
-         'sport', 'sciences', 'campus']
+themes = ['monde', 'politique', 'societe',
+         'sante', 'cinema', 'people', 'television',
+         'medias', 'culture', 'web', 'livres',
+         'style', 'economie', 'sport']
 
-urlBase = 'http://www.lemonde.fr/'
+urlBase = 'http://www.20minutes.fr/'
 
 class Article:
-    def __init__(self, title, content, author):
+    def __init__(self, title, content, summary):
         self.title = title
         self.content = content
-        self.author = author
+        self.summary = summary
     def __str__(self):
         strRes = self.title + '\n'
-        strRes += self.author + '\n'
+        strRes += self.summary + '\n'
         strRes += self.content
         return strRes
 
@@ -26,19 +27,19 @@ def crawlArticle(theme):
     page = requests.get(url)
     pageHTML = page.content.decode(page.encoding)
     soup = BeautifulSoup(pageHTML, 'lxml')
-    laUne = soup.find('article', class_='titre_une')
-    articlePage = laUne.find('a')
-    articleURL = 'http://www.lemonde.fr' + articlePage['href']
+    articleURL = urlBase[0:-1] + soup.find('section', class_='row').find('article').find('a')['href']
     pageArticle = requests.get(articleURL)
     pageArticleHTML = pageArticle.content.decode(pageArticle.encoding)
     soupArticle = BeautifulSoup(pageArticleHTML, 'lxml')
-    article = soupArticle.find('article', class_='article')
-    title = article.find('h1', itemprop='Headline').text
-    author = article.find('span', itemprop='author').text
-    content = article.find('div', id='articleBody').text
-    return Article(title, content, author)
+    article = soupArticle.find('div', class_='article')
+    title = article.find('h1', itemprop='headline').text
+    summary = article.find('span', class_='hat-summary').text
+    contentBlocks = article.find('div', itemprop='articleBody').find_all('p')
+    content = ''
+    for item in contentBlocks:
+        content += item.text + '\n'
+    return Article(title, content, summary)
 
-
-print(crawlArticle('economie'))
+print(crawlArticle('people'))
 
 

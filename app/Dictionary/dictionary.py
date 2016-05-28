@@ -1,20 +1,29 @@
 from app.Model.Word import *
+from app.BDD.connectBDD import *
 import pickle
 
 def findLemme(word):
-    engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test")
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    query = session.query(Word).filter(Word.ortho==word)
-    if query.count() == 0:
-        session.close()
-        return ''
-    for item in query:
-        if item.lemme == item.ortho:
+    with connectBDD() as session:
+        query = session.query(Word).filter(Word.ortho==word)
+        if query.count() == 0:
             session.close()
-            return item.lemme
-    session.close()
-    return query[0].lemme
+            return ''
+        for item in query:
+            if item.lemme == item.ortho:
+                session.close()
+                return item.lemme
+        return query[0].lemme
+
+def findLemmeFreq(word):
+    with connectBDD() as session:
+        query = session.query(Word).filter(Word.ortho==word)
+        if query.count() == 0:
+            return 10000
+        for item in query:
+            if item.lemme == item.ortho:
+                return item.freqlemfilms
+        return query[0].freqlemfilms
+
 
 
 def suggestWord(prefix):

@@ -10,3 +10,7 @@ class Exercise:
             strRes += choice + '\n'
         strRes += 'Bonne réponse:' + str(self.answer)
         return strRes
+
+
+class ImageExercise(Exercise):
+    pass
