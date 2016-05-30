@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-
+from app.Model.Word import *
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -13,3 +13,5 @@ def connectBDD():
     yield db_session
     db_session.close()
     connection.close()
+
+

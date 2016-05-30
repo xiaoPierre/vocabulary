@@ -27,7 +27,10 @@ class Word(Base):
         return self.ortho == self.lemme
 
     def __str__(self):
-        return "I am " + self.ortho + " and my frequence is " + str(self.freqfilms)
+        str1 =  "I am " + self.ortho + " and my frequence is " + str(self.freqfilms)
+        str2 = " my lemme is " + self.lemme
+        str3 = " my categorie is " + self.cgram
+        return str1+str2+str3
 
 
 

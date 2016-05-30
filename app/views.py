@@ -5,6 +5,7 @@ from app.Crawler.crawlWord import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from app.Model.Word import *
+from app.Exercise.ExerciseGenerator import *
 from app.Model.User import *
 
 
@@ -55,12 +56,8 @@ def signuptreatement():
 @app.route('/lookup')
 def lookup():
     word = request.args.get('q')
-    definition = lookUpWord(word)
-    engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test")
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    for element in session.query(Word).filter_by(ortho=word):
-        print(element)
-    print(definition)
+    wordObj = crawlWord(word)
+    testObj = RandomExerciseGenerator().generateExercise(word, 100)
     return render_template('word.html',
-                           word=definition)
+                           word=wordObj,
+                           test=testObj)

@@ -120,7 +120,7 @@ class RandomExerciseGenerator(ExerciseGenerator):
         generator = globals()[self.types[ran]]()
         return generator.generateExercise(word, freq)
 
-
+'''
 a = RandomExerciseGenerator()
 
 #ERROR!!!!!!!!!
@@ -128,3 +128,4 @@ print(a.generateExercise('content', 1000))
 
 print(a.generateExercise('content', 50))
 
+'''

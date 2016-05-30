@@ -14,15 +14,17 @@ def findLemme(word):
                 return item.lemme
         return query[0].lemme
 
+
+#optimise the database  time-consuming!!!!!!!
 def findLemmeFreq(word):
     with connectBDD() as session:
         query = session.query(Word).filter(Word.ortho==word)
         if query.count() == 0:
-            return 10000
+            return 30000
+        freqList = []
         for item in query:
-            if item.lemme == item.ortho:
-                return item.freqlemfilms
-        return query[0].freqlemfilms
+            freqList.append(item.freqlemfilms)
+        return max(freqList)
 
 
 

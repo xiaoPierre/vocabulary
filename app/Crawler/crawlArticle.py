@@ -37,7 +37,7 @@ def crawlArticle(theme):
     contentBlocks = article.find('div', itemprop='articleBody').find_all('p')
     content = ''
     for item in contentBlocks:
-        content += item.text + '\n'
+        content += item.text.strip()
     return Article(title, content, summary)
 
 print(crawlArticle('people'))
