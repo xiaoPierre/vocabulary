@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        {% endblock %}
+    </head>
+    <body>
+            <div id="blockPage">
+                <header>
+                    <div id="topHeader">
+                        <a href="/"><img src="//cdn.vocab.com/images/logo-1adt4zk.gif" alt="logo"></a>
+                        <div class="loginTools">
+                            <a class="signup" href="/signup">Sign Up</a>
+                            |
+                            <a class="login" href="/login">Log in</a>
+                        </div>
+
+                        <nav>
+                            <ul>
+                                <li class="selected">
+                                    <a href="/">Home</a>
+                                </li>
+                                <li>
+                                    <a href="/leaderboards">LeaderBoards</a>
+                                </li>
+                                <li>
+                                    <a href="/blog">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="/help">Help</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div id="bottomHeader">
+                        <ul class="panel">
+                            <li id="challengeTab" class="tab selected">
+                                <a href="/challenge">The <strong>Challenge</strong></a>
+                            </li>
+                            <li id="dictionaryTab" class="tab">
+                                <a href="/dictionary">The <strong>Dictionary</strong></a>
+                            </li>
+                            <li>
+                                <form action="/lookup" method="get" accept-charset="utf-8">
+                                    <input autocomplete="off" tabindex="-1" type="text" name="q" id="search">
+                                    <button id="lookItUp">Look It Up</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </header>
+
+                {% block body %}
+
+                {% endblock %}
+
+                <footer>
+                    <span class="copyright">Copyright © 2016 Vocabulaire.com All Rights Reserved.</span>
+                </footer>
+            </div>
+
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
