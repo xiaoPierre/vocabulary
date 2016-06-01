@@ -31,14 +31,11 @@ class ExerciseGenerator:
             nature = maxWord.cgram
             proposition = session.query(Word).filter(Word.cgram == nature).filter(Word.freqlemfilms < (freq + k)).filter(
                 Word.freqlemfilms > (freq - k))
-            lemmes = set()
+            lemmes = []
             for item in proposition:
-                lemmes.add(item.lemme)
-            propositions = []
-            propositions.append(lemmes.pop())
-            propositions.append(lemmes.pop())
-            propositions.append(lemmes.pop())
-            propositions.append(lemmes.pop())
+                lemmes.append(item.lemme)
+            random.shuffle(lemmes)
+            propositions = [lemmes[0], lemmes[1], lemmes[2], lemmes[3]]
             return propositions
 
     def generateExercise(self, word, freq):
@@ -70,9 +67,8 @@ class BlankFillingExerciseGenerator(ExerciseGenerator):
 class SynonymeExerciseGenerator(ExerciseGenerator):
     def generateExercise(self, word, freq):
         synonyme = crawlSynonyme(word)
-        phrase = crawlPhrase(word)
         if synonyme:
-            topic = phrase + '\n' + 'dans cette phrase, le mot ' + word + ' peut être remplacé par: '
+            topic = "Choisissez le mot qui a le même sens que " + word
             choices = self.proposeChoices(word, freq)
             ran = int(random.random() * 100) % 4
             choices[ran] = synonyme
@@ -82,9 +78,8 @@ class SynonymeExerciseGenerator(ExerciseGenerator):
 class AntonymeExerciseGenerator(ExerciseGenerator):
     def generateExercise(self, word, freq):
         antonyme = crawlAntonyme(word)
-        phrase = crawlPhrase(word)
         if antonyme:
-            topic = phrase + '\n' + 'dans cette phrase, le mot ' + word + " est à l'opposé de: "
+            topic = "Choisissez le mot qui a le sens opposé que " + word
             choices = self.proposeChoices(word, freq)
             ran = int(random.random() * 100) % 4
             choices[ran] = antonyme
@@ -93,7 +88,7 @@ class AntonymeExerciseGenerator(ExerciseGenerator):
 
 class ImageExerciseGenerator(ExerciseGenerator):
     def generateExercise(self, word, freq):
-        topic = "Choisir l'image qui correspond à " + word
+        topic = "Choisissez l'image qui correspond à " + word
         choices = self.proposeChoices(word, freq)
         ran = int(random.random() * 100) % 4
         choices[ran] = word

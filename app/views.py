@@ -57,7 +57,7 @@ def signuptreatement():
 def lookup():
     word = request.args.get('q')
     wordObj = crawlWord(word)
-    testObj = RandomExerciseGenerator().generateExercise(word, 100)
+    testObj = RandomExerciseGenerator().generateExercise(word, 50)
     return render_template('word.html',
                            word=wordObj,
                            test=testObj)
