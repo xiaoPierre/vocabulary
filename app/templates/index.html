@@ -1,144 +1,96 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <title>Bienvenue chez Voca!</title>
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/css/style.css" rel="stylesheet">
+{% extends 'base.html' %}
 
+{% block test %}
+    <h4 id="topic">{{ test['topic'] }}</h4>
+    <form name="test">
+    {% if not test['isImageExo'] %}
+        {% for choice in test['choices'] %}
+        <input type="radio" name="choice" value={{ loop.index }}><span>{{ choice }}</span><br/>
+        {% endfor %}
+    {% endif %}
+    {% if test['isImageExo'] %}
+        {% for choice in test['choices'] %}
+        <input type="radio" name="choice" value={{ loop.index }}><img alt={{ choice }} src={{ choice }}> <br/>
+        {% endfor %}
+    {% endif %}
+        <button type="button" id="cfm" class="btn btn-default">Confirmer</button>
+        <button type="button" id="next" class="btn btn-default">Next Test</button>
+    </form>
+    <h5 id="result" style="font-size: 15px; color: #ac2925">Please choose</h5>
+    <h5 id="answer" hidden>{{ test['answer'] }}</h5>
+    <script>
+    $(document).ready(function(){
+      $("button#cfm").click(function(){
+          var a = $("input[name='choice']:checked").val() - 1;
+          var answer = $("h5#answer").text();
+          if (a == answer)
+          {
+              $("h5#result").text("Bravo!");
+          }
+          else {$("h5#result").text("Tant pis!");}
+      });
+        $("button#next").click(function()
+        {
+        $.getJSON("/getRandomTest", function(data)
+        {
+            $("#topic").text(data.topic);
+            $("#result").text("Please choose");
 
-</head>
-<body>
-
-<script src="jquery-2.2.0.min.js"></script>
-<script src="bootstrap.min.js"></script>
-
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-           <a class="navbar-brand" href="#"><img id="esflogo" alt="Brand" src="../static/image/voca.png"></a>
-            <p class="navbar-text">Voca.fr</p>
-        </div>
-
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Page d'accueil <span class="sr-only">(current)</span></a></li>
-
-            </ul>
-            <ul class="nav navbar-nav navbar-right ">
-                <form class="navbar-form navbar-left" role="search" action="lookup" method="get">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search" name="q">
-                    </div>
-                    <button type="submit" class="btn btn-default">Go!</button>
-                </form>
-                <li><a href="contact.html">S'inscrire</a></li>
-                <li><a href="contact.html">Se Connecter</a></li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-
-</nav>
-
-
-<div class="tabbable" id="main-bar1"> <!-- Only required for left/right tabs -->
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab"> Test du jour</a></li>
-        <li><a href="#tab2" data-toggle="tab">Voca</a></li>
-        <li><a href="#tab3" data-toggle="tab">Liste du lexique</a></li>
-
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="tab1">
-
-
-
-            <div id="challenge-page" class="jumbotron">
-                <div class="container">
-
-
-                    <h2>Bienvenue Chez Voca<small> <br/>Ameliorer votre français à partir d'ici</small></h2>
-                    <p><a class="btn btn-success btn-lg" href="#" role="button">Clikez ici pour savoir + &gg;</a></p>
-                </div>
-            </div>
-
-
-
-        </div>
-        <div class="tab-pane" id="tab2">
-
-            <div id="Voca-page" class="jumbotron">
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-lg-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search for...">
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
-                            </div><!-- /input-group -->
-                        </div><!-- /.col-lg-6 -->
-                    </div><!-- /.row -->
-
-
-                </div>
-            </div>
-
-        </div>
-
-
-        <div class="tab-pane active" id="tab3">
-
-
-
-            <div id="challenge-page" class="jumbotron">
-                <div class="container">
-
-
-                    <h2>Bienvenue Chez Voca<small> <br/>待补充内容, 词汇列表</small></h2>
-                    <p><a class="btn btn-success btn-lg" href="#" role="button">Clikez ici pour savoir + &gg;</a></p>
-                </div>
-            </div>
-
-
-
-        </div>
-
-
-        {% block wordDefinition %}
-
-        {% endblock %}
-
-
-        {% block wordTest %}
-        {% endblock %}
-    </div>
-</div>
+            var image = data.image;
+            if (image)
+            {
+                var block = $("[value=1]");
+                block.next().remove();
+                block.after("<img src=" + data.choices[0] + "\">");
+                var block2 = $("[value=2]");
+                block2.next().remove();
+                block2.after("<img src=" + data.choices[1] + "\">");
+                var block3 = $("[value=3]");
+                block3.next().remove();
+                block3.after("<img src=" + data.choices[2] + "\">");
+                var block4 = $("[value=4]");
+                block4.next().remove();
+                block4.after("<img src=" + data.choices[3] + "\">");
+            }
+            else
+            {
+                var block = $("[value=1]");
+                block.next().remove();
+                block.after("<span>" + data.choices[0] + "</span>");
+                var block2 = $("[value=2]");
+                block2.next().remove();
+                block2.after("<span>" + data.choices[1] + "</span>");
+                var block3 = $("[value=3]");
+                block3.next().remove();
+                block3.after("<span>" + data.choices[2] + "</span>");
+                var block4 = $("[value=4]");
+                block4.next().remove();
+                block4.after("<span>" + data.choices[3] + "</span>");
+            }
+            $("#answer").text(data.answer);
+        });
+        })
+    });
+    </script>
+{% endblock %}
 
 
 
 
 
+{% block article %}
+    <h3 align="center">{{ article['title'] }}</h3>
+    <p style="font-size: 15px; font-family: 'Ubuntu', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif" id="article">{{ article['content'] }}</p>
+    <button type="button" id="analyse" class="btn btn-default">Analyse</button>
+    <script>
+    $(document).ready(function()
+    {
+        $("button#analyse").click(function()
+        {
+        })
+    })
 
-<div class="footer">
-    <div class="container">
-        <div class="copy-right">
-            <p>© Developpé par &nbsp; C.LIN, Y. HAN et E. ZHANG, <a href="presentation.html"> l'Equipe Projet Logiciel Npusi Promo 2017</a></p>
-        </div>
-    </div>
+    </script>
 
-</div>
 
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block levelTest %}
+{% for level in levelTest %}
+    <h3>{{ levelTest[level]['topic'] }}</h3>
+    <form level={{ level }}>
+    {% if not levelTest[level]['isImageExo'] %}
+        {% for choice in levelTest[level]['choices'] %}
+        <input type="radio" name="choice" value=value={{ loop.index }}>{{ choice  }} <br/>
+        {% endfor %}
+    {% endif %}
+    {% if levelTest[level]['isImageExo'] %}
+        {% for choice in levelTest[level]['choices'] %}
+        <input type="radio" name="choice" value=value={{ loop.index }}><img src={{ choice }}> <br/>
+        {% endfor %}
+    {% endif %}
+    </form>
+    <h5>{{ levelTest[level]['answer'] }}</h5>
+{% endfor %}
+    <button type="button" id="cfm" class="btn btn-default">Confirmer</button>
+    <script>
+    $(document).ready(function()
+    {
+        $("button#cfm").click(function()
+        {
+
+        })
+    })
+
+    </script>
+
+
+
+{% endblock %}
+

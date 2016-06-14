@@ -1,7 +1,10 @@
+import random
+
 import requests
 from bs4 import BeautifulSoup
-from app.Crawler.WordCrawled import *
-import random
+
+from app.Model.WordCrawled import *
+
 
 #TODO location verbe, verbe vt et vi
 def crawlWord(word):
@@ -14,7 +17,11 @@ def crawlWord(word):
     pageHTML = page.content.decode(page.encoding)
     soup = BeautifulSoup(pageHTML, 'lxml')
     sectionFrancais = soup.find("div", id="mw-content-text", lang='fr')
-    etymologie = sectionFrancais.find('dl').text
+    etymologieBlock = sectionFrancais.find('dl')
+    if etymologieBlock:
+        etymologie = etymologieBlock.text
+    else:
+        etymologie = ''
     natures = []
     for nature in natureListe:
         natureFound = lookNature(sectionFrancais, nature)
@@ -118,7 +125,7 @@ def crawlSynonyme(word):
         synonyme = synonymes[0].text.strip()
         return synonyme
     else:
-        return []
+        return ''
 
 def crawlAntonyme(word):
     urlBase = 'http://www.antonyme.org/antonyme/'
@@ -127,20 +134,26 @@ def crawlAntonyme(word):
     pageHTML = page.content.decode('utf-8')
     soup = BeautifulSoup(pageHTML, 'lxml')
     conteneur = soup.find('div', id='conteneur')
-    antonymeDIV = conteneur.find('ul', class_='synos')
+    if conteneur:
+        antonymeDIV = conteneur.find('ul', class_='synos')
+    else:
+        return ''
     if antonymeDIV:
         antonymes = antonymeDIV.find_all('li')
         antonyme = antonymes[0].text.strip()
         return antonyme
     else:
-        return []
+        return ''
 
 def crawlPhrase(word):
     wordObj = crawlWord(word)
     natures = []
     for nature in wordObj.natures:
         natures.append(nature)
-    natureObj = random.choice(natures)
+    if natures:
+        natureObj = random.choice(natures)
+    else:
+        return ''
     defs = []
     for definition in natureObj.definitions:
         defs.append(definition)
@@ -148,6 +161,8 @@ def crawlPhrase(word):
     for definition in defs:
         if len(definition.exemples) > 0:
             return definition.exemples[0]
+        else:
+            return ''
 
 
 if __name__ == '__main__':

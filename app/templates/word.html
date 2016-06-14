@@ -1,31 +1,37 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 
-{% block wordDefinition %}
-    <h1> Word Definition </h1>
+{% block definition %}
     <h2> Etymogie </h2>
     <h3>{{ word['etymonogie'] }}</h3>
+    <br>
     {% for nature in word['natures'] %}
         <h4>{{ nature['categorie'] }}</h4>
         {% for definition in nature['definitions'] %}
-            <ul>
+            <ol style="list-style-type: decimal">
                 <li>{{ definition['definition'] }}</li>
                 {% for example in definition['exemples'] %}
-                    <ul>
+                    <ol style="list-style-type: decimal">
                         <li>{{ example }}</li>
-                    </ul>
+                    </ol>
                 {% endfor %}
-            </ul>
+            </ol>
         {% endfor %}
     {% endfor %}
 {% endblock %}
 
-{% block wordTest %}
-    <h1>{{ test['topic'] }}</h1>
-    {% for choice in test['choices'] %}
-        <ul>
-            <li>{{ choice }}</li>
-        </ul>
-    {% endfor %}
-    <h5>{{ test['answer'] }}</h5>
-
+{% block test %}
+    <h4 align="centre">{{ test['topic'] }}</h4>
+    <form>
+    {% if not test['isImageExo'] %}
+        {% for choice in test['choices'] %}
+        <input type="radio"/>{{ choice  }} <br/>
+        {% endfor %}
+    {% endif %}
+    {% if test['isImageExo'] %}
+        {% for choice in test['choices'] %}
+        <input type="radio"/><img src={{ choice }}> <br/>
+        {% endfor %}
+    {% endif %}
+    </form>
+    <h5 hidden>{{ test['answer'] }}</h5>
 {% endblock %}

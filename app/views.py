@@ -1,30 +1,28 @@
-from flask import render_template, flash, redirect, request
+from flask import render_template, flash, redirect, request, jsonify
 from app import app
-from app.forms import LoginForm
-from app.Crawler.crawlWord import *
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
-from app.Model.Word import *
 from app.Exercise.ExerciseGenerator import *
 from app.Model.User import *
+from app.BDD.connectBDD import *
+from app.Dictionary.dictionary import *
+from app.Crawler.crawlArticle import *
+from app.Exercise.ExerciseGenerator import *
+from app.Exercise.LevelTest import getLevelTests
+from app.Article.analyseArticle import *
 
 
 # index view function suppressed for brevity
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    test = TotalRandomExerciseGenerator().generateRandomExercise()
+    article = crawlRandomArticle()
+    return render_template('index.html', test = test, article = article)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requested for OpenID="' + form.openid.data + '", remember_me=' + str(form.remember_me.data))
-        return redirect('/index')
     return render_template('login.html',
-        title='Sign In',
-        form=form)
+        title='Sign In')
 
 
 
@@ -41,23 +39,59 @@ def signuptreatement():
     passwordConfirm=request.form['passwordConfirm']
     assert(password == passwordConfirm)
     if (passwordConfirm != password):
-        return render_template('index.html')
-    engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test", echo=True)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    user = User(firstName=firstName, lastName=lastName,
-                email=email, password=password)
-    session.add(user)
-    session.commit()
-    session.close()
-    return render_template('thanks.html', firstName=firstName, lastName=lastName)
+        return render_template('base.html')
+    with connectBDD() as session:
+        user = User(firstName=firstName, lastName=lastName,
+                    email=email, password=password)
+        session.add(user)
+        session.commit()
+    return redirect('levelTest')
 
 
 @app.route('/lookup')
 def lookup():
     word = request.args.get('q')
     wordObj = crawlWord(word)
-    testObj = RandomExerciseGenerator().generateExercise(word, 50)
+    testObj = RandomExerciseGenerator().generateExercise(word)
     return render_template('word.html',
                            word=wordObj,
                            test=testObj)
+
+@app.route('/findPrefix', methods=['GET'])
+def findPrefix():
+    pre = request.args.get('prefix', '', type=str)
+    return jsonify(result=suggestWord(pre))
+
+@app.route('/analyseArticle', methods=['POST', 'GET'])
+def analyse():
+    texte = "Le dernier, Albus, est confronté à l’héritage de son père et aux forces de l’obscurité.La pièce de théâtre sera jouée à Londres, au Palace Theatre"
+    return jsonify(result=analyseArticle(texte))
+
+
+@app.route('/levelTest')
+def levelTest():
+    tests = getLevelTests()
+    return render_template('levelTest.html', levelTest=tests)
+
+@app.route('/getRandomTest')
+def getRandomTest():
+    test = TotalRandomExerciseGenerator().generateRandomExercise()
+    topic = test.topic
+    choices = test.choices
+    answer = test.answer
+    image = test.isImageExo
+    return jsonify(topic = topic, choices = choices, answer = answer, image=image)
+
+
+
+
+'''
+@app.route('/loginTreatment'):
+def loginTreatment():
+    email=request.form['email']
+    password = request.form['password']
+    with connectBDD() as session:
+        user = session.query(User).filter(User.email==email)
+        if user.password == password:
+            pass
+'''

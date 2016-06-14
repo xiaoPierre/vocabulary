@@ -1,16 +1,14 @@
-from app.Model.Word import *
 from app.BDD.connectBDD import *
 import pickle
+import os
 
 def findLemme(word):
     with connectBDD() as session:
         query = session.query(Word).filter(Word.ortho==word)
         if query.count() == 0:
-            session.close()
             return ''
         for item in query:
             if item.lemme == item.ortho:
-                session.close()
                 return item.lemme
         return query[0].lemme
 
@@ -20,15 +18,14 @@ def findLemmeFreq(word):
     with connectBDD() as session:
         query = session.query(Word).filter(Word.ortho==word)
         if query.count() == 0:
-            return 30000
+            return 90000
         freqList = []
         for item in query:
             freqList.append(item.freqlemfilms)
         return max(freqList)
 
-
-
 def suggestWord(prefix):
+    print(os.getcwd())
     with open('dawgFile.dawg', 'rb') as dawgFile:
         dawgObj = pickle.load(dawgFile)
         words = dawgObj.keys(prefix)
@@ -36,4 +33,3 @@ def suggestWord(prefix):
             return words[0:6]
         else:
             return dawgObj.keys(prefix)
-

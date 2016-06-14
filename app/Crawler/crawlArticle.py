@@ -1,24 +1,16 @@
 import requests
+from app.Model.Article import *
 from bs4 import BeautifulSoup
+import random
 
-# TODO purifier l'article ramassée
 themes = ['monde', 'politique', 'societe',
          'sante', 'cinema', 'people', 'television',
          'medias', 'culture', 'web', 'livres',
-         'style', 'economie', 'sport']
+         'economie']
 
 urlBase = 'http://www.20minutes.fr/'
 
-class Article:
-    def __init__(self, title, content, summary):
-        self.title = title
-        self.content = content
-        self.summary = summary
-    def __str__(self):
-        strRes = self.title + '\n'
-        strRes += self.summary + '\n'
-        strRes += self.content
-        return strRes
+
 
 
 def crawlArticle(theme):
@@ -40,6 +32,7 @@ def crawlArticle(theme):
         content += item.text.strip()
     return Article(title, content, summary)
 
-print(crawlArticle('people'))
-
+def crawlRandomArticle():
+    theme = random.choice(themes)
+    return crawlArticle(theme)
 

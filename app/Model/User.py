@@ -17,6 +17,7 @@ class User(Base):
 class WordLearning(Base):
     __tablename__ = 'userWordTable'
     id = Column(Integer, primary_key=True, autoincrement=True)
+    word = Column(String())
     mastery = Column(Integer())
     user_id = Column(Integer, ForeignKey('userTable.id'))
     user = relationship('User')
@@ -40,5 +41,6 @@ class Preference(Base):
     user_id = Column(Integer, ForeignKey('userTable.id'))
     user = relationship('User')
 
-engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test")
-Base.metadata.create_all(engine)
+if __name__ == '__main__':
+    engine = create_engine("postgresql://erkang:rrrrrrrr@localhost/test")
+    Base.metadata.create_all(engine)

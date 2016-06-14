@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenue chez Voca!</title>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+<script src="../static/js/jquery-2.2.0.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+           <a class="navbar-brand" href="#"><img id="esflogo" alt="Brand" src="../static/image/voca.png"></a>
+            <p class="navbar-text">Voca.fr</p>
+        </div>
+
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Page d'accueil <span class="sr-only">(current)</span></a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right ">
+                <form class="navbar-form navbar-left" role="search" action="lookup" method="get">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q">
+                    </div>
+                    <button type="submit" class="btn btn-default">Go!</button>
+                    <button type="button" id="test" class="btn btn-default">findPrefix</button>
+                    <div class="search_suggest" id="gov_search_suggest">
+                        <ul>
+                        </ul>
+                    </div>
+                </form>
+                <li><a href="signup">S'inscrire</a></li>
+                <li><a href="login">Se Connecter</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+
+
+
+{% block body %}
+<div class="tabbable" id="main-bar1"> <!-- Only required for left/right tabs -->
+    <p hidden id="result">result</p>
+
+
+        {% block definition %}
+        {% endblock %}
+        <div class="test">
+        {% block test %}
+
+        {% endblock %}
+        </div>
+        <hr>
+        <div>
+            {% block article %}
+            {% endblock %}
+        </div>
+
+
+
+        {% block levelTest %}
+        {% endblock %}
+
+</div>
+{% endblock %}
+
+
+
+
+
+
+<div class="footer">
+    <div class="container">
+        <div class="copy-right">
+            <p>© Developpé par &nbsp; C.LIN, Y. HAN et E. ZHANG, <a href="presentation.html"> l'Equipe Projet Logiciel Npusi Promo 2017</a></p>
+        </div>
+    </div>
+
+</div>
+
+<script type=text/javascript>
+    $(document).ready(function(){
+      $("button#test").click(function(){
+        $.getJSON("/findPrefix", {prefix : $('input[name="q"]').val()}, function(data){
+            $("#result").removeAttr("hidden");
+          $("#result").text(data.result);
+        });
+      });
+    });
+</script>
+
+
+</body>
+</html>
